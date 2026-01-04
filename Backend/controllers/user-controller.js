@@ -2,8 +2,6 @@ import argon2 from 'argon2'
 import  jwt  from 'jsonwebtoken'
 
 import UserModel from '../Models/User-Model.js'
-import { sendEmail } from '../config/send-Email.js'
-import { VerifyEmailTemplate } from '../templates/email-templates.js'
 import { accessToken } from '../tokens/accessToken.js'
 import { refreshToken } from '../tokens/refreshToken.js'
 import { uploadImageCloud } from '../Cloudenary/image-cloud.js'
@@ -48,15 +46,7 @@ export const registerUserController = async (req, res) => {
         const newUser = new UserModel(payload)
         const save = await newUser.save()
 
-        const verifyEmailUrl = `${process.env.FRONTEND_URL}/verify-email?code=${save?._id}`
-         await sendEmail({
-            sendTo: email,
-            subject: 'Verify Email from Abdur World',
-            html: VerifyEmailTemplate({
-                name,
-                verifyEmailUrl
-            })
-        })
+
         return res.json({
             message: 'User created Successfully',
             error : false,
